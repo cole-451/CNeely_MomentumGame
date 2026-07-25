@@ -2,7 +2,7 @@ using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuManager : Singleton<MenuManager>
+public class LevelSelect : Singleton<MenuManager>
 {
     [SerializeField] public AudioSource musicPlayer;
 
@@ -18,9 +18,17 @@ public class MenuManager : Singleton<MenuManager>
         
     }
 
-    public void StartGame()
+    public void StartLvl1()
     {
-        SceneManager.LoadScene("LevelSelect");
+        SceneManager.LoadScene("MainLevel1");
+    }
+    public void StartLvl2()
+    {
+        SceneManager.LoadScene("MainLevel2");
+    }
+    public void StartLvl3()
+    {
+        SceneManager.LoadScene("MainLevel3");
     }
 
     public void QuitGame()

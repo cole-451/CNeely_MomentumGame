@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 5718006681981398209}
   m_Layer: 0
   m_Name: Guitarist
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -204,7 +204,8 @@ MonoBehaviour:
   strumCooldown: 0.15
   linearDamping: 0.3
   maxSpeed: 15
-  Guitar: {fileID: 0}
+  Guitar: {fileID: 970550879051558896}
+  guitarRotationSpeed: 720
 --- !u!50 &6796646924592279076
 Rigidbody2D:
   serializedVersion: 5
@@ -221,7 +222,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 22d9aebcbf7fea8438c92cdb13d9bbf9, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
