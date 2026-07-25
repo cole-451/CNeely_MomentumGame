@@ -1,5 +1,6 @@
 using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KillBarrier : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class KillBarrier : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        SceneManager.LoadScene(CurrentScene);
     }
 
     // Update is called once per frame

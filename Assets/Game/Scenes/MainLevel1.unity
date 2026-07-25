@@ -532,6 +532,7 @@ GameObject:
   - component: {fileID: 305912953}
   - component: {fileID: 305912955}
   - component: {fileID: 305912954}
+  - component: {fileID: 305912956}
   m_Layer: 0
   m_Name: DIE NOOB TILE
   m_TagString: Untagged
@@ -660,6 +661,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &305912956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305912952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 227904ae76afddb439b7570c6a4379af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KillBarrier
+  CurrentScene: MainLevel1
 --- !u!1 &372934102
 GameObject:
   m_ObjectHideFlags: 0
@@ -1220,6 +1234,7 @@ GameObject:
   - component: {fileID: 945826930}
   - component: {fileID: 945826932}
   - component: {fileID: 945826931}
+  - component: {fileID: 945826933}
   m_Layer: 0
   m_Name: WinWall
   m_TagString: Untagged
@@ -1272,7 +1287,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -1348,6 +1363,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &945826933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945826929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da7201ce8c4884f418191a9c5e1e763c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Goal
 --- !u!1 &954875178
 GameObject:
   m_ObjectHideFlags: 0
