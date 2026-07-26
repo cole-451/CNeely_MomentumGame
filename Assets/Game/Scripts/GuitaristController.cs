@@ -11,6 +11,7 @@ using UnityEngine.InputSystem;
 /// directly rather than an Input Actions asset.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(AudioSource))]
 public class GuitaristController : MonoBehaviour
 {
     [Header("Strum Settings")]
@@ -31,7 +32,33 @@ public class GuitaristController : MonoBehaviour
     [Tooltip("How fast the guitar rotates to face the held direction, in degrees/second. Set very high (e.g. 3600) for an instant snap.")]
     public float guitarRotationSpeed = 720f;
 
+    [Header("Guitar Fret Directions")]
+    [Tooltip("Direction contributed while the Green (A) fret is held.")]
+    public Vector2 greenFretDirection = Vector2.up;
+    [Tooltip("Direction contributed while the Red (B) fret is held.")]
+    public Vector2 redFretDirection = Vector2.down;
+    [Tooltip("Direction contributed while the Yellow (Y) fret is held.")]
+    public Vector2 yellowFretDirection = Vector2.left;
+    [Tooltip("Direction contributed while the Blue (X) fret is held.")]
+    public Vector2 blueFretDirection = Vector2.right;
+    [Tooltip("Direction contributed while the Orange (LB) fret is held. Left at zero by default - reserved for later (boost, diagonal, whatever you want).")]
+    public Vector2 orangeFretDirection = Vector2.zero;
+
+    [Header("Strum Sounds")]
+    [Tooltip("Played when a strum launches the player upward.")]
+    public AudioClip upSound;
+    [Tooltip("Played when a strum launches the player downward.")]
+    public AudioClip downSound;
+    [Tooltip("Played when a strum launches the player left.")]
+    public AudioClip leftSound;
+    [Tooltip("Played when a strum launches the player right.")]
+    public AudioClip rightSound;
+    [Range(0f, 1f)]
+    [Tooltip("Volume for strum sounds.")]
+    public float strumSoundVolume = 1f;
+
     private Rigidbody2D rb;
+    private AudioSource audioSource;
     private float cooldownTimer;
     private float currentGuitarAngle;
 
@@ -39,6 +66,7 @@ public class GuitaristController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         rb.linearDamping = linearDamping;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -58,6 +86,7 @@ public class GuitaristController : MonoBehaviour
             if (direction != Vector2.zero)
             {
                 rb.AddForce(direction * strumForce, ForceMode2D.Impulse);
+                PlayStrumSound(direction);
                 cooldownTimer = strumCooldown;
             }
         }
@@ -74,20 +103,52 @@ public class GuitaristController : MonoBehaviour
         }
     }
 
+    private void PlayStrumSound(Vector2 direction)
+    {
+        if (audioSource == null) return;
+
+        // Direction can be a diagonal (e.g. two frets held together), but we
+        // only have 4 sounds - so pick whichever axis is stronger and play
+        // the sound for that side.
+        AudioClip clip;
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            clip = direction.x > 0f ? rightSound : leftSound;
+        }
+        else
+        {
+            clip = direction.y > 0f ? upSound : downSound;
+        }
+
+        if (clip != null)
+        {
+            audioSource.PlayOneShot(clip, strumSoundVolume);
+        }
+    }
+
     private Vector2 GetHeldDirection()
     {
-        if (Keyboard.current == null) return Vector2.zero;
+        Vector2 dir = Vector2.zero;
 
-        float x = 0f;
-        float y = 0f;
+        if (Keyboard.current != null)
+        {
+            if (Keyboard.current.leftArrowKey.isPressed) dir += Vector2.left;
+            if (Keyboard.current.rightArrowKey.isPressed) dir += Vector2.right;
+            if (Keyboard.current.upArrowKey.isPressed) dir += Vector2.up;
+            if (Keyboard.current.downArrowKey.isPressed) dir += Vector2.down;
+        }
 
-        if (Keyboard.current.leftArrowKey.isPressed) x -= 1f;
-        if (Keyboard.current.rightArrowKey.isPressed) x += 1f;
-        if (Keyboard.current.upArrowKey.isPressed) y += 1f;
-        if (Keyboard.current.downArrowKey.isPressed) y -= 1f;
+        if (Gamepad.current != null)
+        {
+            // Mode 1 default mapping: A=Green, B=Red, Y=Yellow, X=Blue, LB=Orange
+            if (Gamepad.current.buttonSouth.isPressed) dir += greenFretDirection;
+            if (Gamepad.current.buttonEast.isPressed) dir += redFretDirection;
+            if (Gamepad.current.buttonNorth.isPressed) dir += yellowFretDirection;
+            if (Gamepad.current.buttonWest.isPressed) dir += blueFretDirection;
+            if (Gamepad.current.leftShoulder.isPressed) dir += orangeFretDirection;
+        }
 
-        Vector2 dir = new Vector2(x, y);
-        return dir.normalized; // handles diagonals cleanly (e.g. Up+Right = 45 degrees, not 2x force)
+        return dir.normalized; // handles diagonals cleanly - e.g. Green+Blue held together = Up+Right diagonal
     }
 
     private void UpdateGuitarRotation(Vector2 direction)
